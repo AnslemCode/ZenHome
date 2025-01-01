@@ -6,14 +6,14 @@ const useProperties = () => {
     data,
     isError,
     isLoading,
-    refetch: refech,
+    refetch: refetch,
   } = useQuery("allProperties", getAllProperties, { refetchOnMount: false });
 
   return {
     data,
     isError,
     isLoading,
-    refech,
+    refetch,
   };
 };
 

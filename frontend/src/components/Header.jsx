@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 import Navbar from "./Navbar";
 import { MdClose, MdMenu, MdPerson } from "react-icons/md";
+import { useAuth0 } from "@auth0/auth0-react";
+import ProfileMenu from "./ProfileMenu";
 
 const Header = () => {
   const [active, setActive] = useState(false);
@@ -24,6 +26,8 @@ const Header = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [menuOpened]);
+
+  const { loginWithRedirect, isAuthenticated, user, logout } = useAuth0();
   return (
     <header
       className={`${
@@ -66,10 +70,17 @@ const Header = () => {
               className="xl:hidden cursor-pointer text-3xl"
             />
           )}
-          <button className="flexCenter gap-x-2 !px-5 btn-dark">
-            <MdPerson className="text-xl" />
-            <span>Log In</span>
-          </button>
+          {!isAuthenticated ? (
+            <button
+              onClick={loginWithRedirect}
+              className="flexCenter gap-x-2 !px-5 btn-dark"
+            >
+              <MdPerson className="text-xl" />
+              <span>Log In</span>
+            </button>
+          ) : (
+            <ProfileMenu user={user} logout={logout} />
+          )}
         </div>
       </div>
     </header>

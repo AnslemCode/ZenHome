@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import { VscSettings } from "react-icons/vsc";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { PROPERTIES } from "../constant/data";
 import Item from "./Item";
+import useProperties from "../hooks/useProperties";
+import { PuffLoader } from "react-spinners";
 
 // Import Swiper styles
 import "swiper/css";
@@ -14,6 +15,27 @@ import "swiper/css/pagination";
 // import required modules
 import { Autoplay } from "swiper/modules";
 const Properties = () => {
+  const { data, isError, isLoading } = useProperties();
+  if (isError)
+    return (
+      <div>
+        <span>Error while fetching data</span>
+      </div>
+    );
+
+  if (isLoading) {
+    return (
+      <div className="h-64 flexCenter">
+        <PuffLoader
+          height={80}
+          width={80}
+          radius={1}
+          color="#36d7b7"
+          aria-label="Puff-loading"
+        />
+      </div>
+    );
+  }
   return (
     <section className="max-padd-container">
       <div className="py-16 xl:py-28 rounded-3xl">
@@ -54,7 +76,7 @@ const Properties = () => {
           modules={[Autoplay]}
           className="h-[488px] md:h-[533px] xl:[422px] mt-5"
         >
-          {PROPERTIES.slice(0, 6).map((property) => (
+          {data.slice(0, 6).map((property) => (
             <SwiperSlide key={property.title}>
               <Item property={property} />
             </SwiperSlide>

@@ -7,10 +7,11 @@ import {
   addFavourite,
   getAllFavourites,
 } from "../controllers/userController.js";
+import checkJwt from "../config/auth0Config.js";
 
 const router = express.Router();
 
-router.post("/register", createUser);
+router.post("/register", checkJwt, createUser);
 router.post("/bookVisit/:id", bookVisit);
 router.get("/allBookings", getAllBookings);
 router.post("/cancelBooking/:id", cancelBooking);
