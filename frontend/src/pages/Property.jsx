@@ -1,7 +1,8 @@
-import { useQuery } from "react-query";
+import { useContext, useState } from "react";
+import { useQuery, useMutation } from "react-query";
 import { useLocation } from "react-router-dom";
 import { PuffLoader } from "react-spinners";
-import { getProperty } from "../utils/api";
+import { getProperty, removeBooking } from "../utils/api";
 import { FaHeart, FaStar } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import {
@@ -11,13 +12,41 @@ import {
 } from "react-icons/md";
 import { CgRuler } from "react-icons/cg";
 import Map from "../components/Map";
+import BookingModal from "../components/BookingModal";
+import useAuthCheck from "../hooks/useAuthCheck";
+import { useAuth0 } from "@auth0/auth0-react";
+import userDetailContext from "../context/UserDetailContext";
+import { Button } from "@mantine/core";
+import { toast } from "react-toastify";
 
 const Property = () => {
+  const [modalOpened, setModalOpened] = useState(false);
+  const { validateLogin } = useAuthCheck();
   const location = useLocation();
   const id = location.pathname.split("/")[2];
+  const { user } = useAuth0();
   const { data, isError, isLoading } = useQuery(["property", id], () =>
     getProperty(id)
   );
+
+  const {
+    userDetail: { token, bookings },
+    setUserDetail,
+  } = useContext(userDetailContext);
+
+  const { mutate: cancelBooking, isLoading: cancelling } = useMutation({
+    mutationFn: () => removeBooking(id, user?.email, token),
+    onSuccess: () => {
+      setUserDetail((prev) => ({
+        ...prev,
+        bookings: prev.bookings.filter((booking) => booking.id !== id),
+      }));
+      toast.success("Booking cancelled", {
+        position: "bottom-right",
+      });
+    },
+  });
+
   if (isError)
     return (
       <div>
@@ -94,12 +123,45 @@ const Property = () => {
           <h4 className="h4 mt-3">Property Details</h4>
           <p className="mb-4">{data?.description}</p>
           <div className="flexBetween pt-7">
-            <button className="btn-dark">Book Visit</button>
+            {bookings?.map((booking) => booking.id).includes(id) ? (
+              <>
+                <Button
+                  onClick={() => {
+                    cancelBooking();
+                  }}
+                  variant="outline"
+                  color="red"
+                  w={"100%"}
+                  disabled={cancelling}
+                >
+                  Cancel Booking
+                </Button>
+                <p className="text-red-500 medium-15 ml-3">
+                  Youve already booked visit for{" "}
+                  {bookings?.filter((booking) => booking?.id === id)[0].date}
+                </p>
+              </>
+            ) : (
+              <button
+                onClick={() => {
+                  validateLogin() && setModalOpened(true);
+                }}
+                className="btn-dark"
+              >
+                Book visit
+                <BookingModal
+                  opened={modalOpened}
+                  setOpened={setModalOpened}
+                  propertyId={id}
+                  email={user?.email}
+                />
+              </button>
+            )}
           </div>
         </div>
 
         {/* RIGHT SIDE */}
-        <div>
+        <div className="flex-1">
           <Map
             address={data?.address}
             city={data?.city}

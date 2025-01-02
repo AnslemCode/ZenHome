@@ -1,5 +1,5 @@
 import axios from "axios";
-// import dayjs from "dayjs";
+import dayjs from "dayjs";
 import { toast } from "react-toastify";
 
 export const api = axios.create({
@@ -44,6 +44,47 @@ export const createUser = async (email, token) => {
       "/user/register",
       {
         email,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  } catch (error) {
+    toast.error("Something went wrong, try again");
+    throw error;
+  }
+};
+
+export const bookVisit = async (date, propertyId, email, token) => {
+  try {
+    await api.post(
+      `user/bookVisit/${propertyId}`,
+      {
+        email,
+        id: propertyId,
+        date: dayjs(date).format("DD/MM/YYYY"),
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  } catch (error) {
+    toast.error("Something went wrong, try again");
+    throw error;
+  }
+};
+
+export const removeBooking = async (id, email, token) => {
+  try {
+    await api.post(
+      `user/cancelBooking/${id}`,
+      {
+        email,
+        id,
       },
       {
         headers: {
