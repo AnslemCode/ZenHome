@@ -5,7 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { getAllBookings } from "../utils/api";
 
 const useBookings = () => {
-  const { userDetails, setUserDetails } = useContext(userDetailContext);
+  const { userDetail, setUserDetail } = useContext(userDetailContext);
   const queryRef = useRef();
   const { user } = useAuth0();
 
@@ -16,9 +16,9 @@ const useBookings = () => {
     refetch: refetch,
   } = useQuery({
     queryKey: "allBookings",
-    queryFn: () => getAllBookings(user?.email, userDetails?.token),
+    queryFn: () => getAllBookings(user?.email, userDetail?.token),
     onSuccess: (data) => {
-      setUserDetails((prev) => ({
+      setUserDetail((prev) => ({
         ...prev,
         bookings: data,
       }));
@@ -30,7 +30,7 @@ const useBookings = () => {
 
   useEffect(() => {
     queryRef.current && queryRef.current();
-  }, [userDetails?.token]);
+  }, [userDetail?.token]);
   return {
     data,
     isError,

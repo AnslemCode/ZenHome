@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
+
 import { useContext, useState } from "react";
 import { Button, Modal } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
@@ -15,7 +15,6 @@ const BookingModal = ({ opened, setOpened, propertyId, email }) => {
     userDetail: { token },
     setUserDetail,
   } = useContext(userDetailContext);
-  console.log("Token", token);
 
   const handleBookingSuccess = () => {
     toast.success("Booking successful", {
@@ -50,6 +49,7 @@ const BookingModal = ({ opened, setOpened, propertyId, email }) => {
       title="Select Your date of visit"
       centered
       onClose={() => setOpened(false)}
+      closeOnClickOutside
     >
       <div className="flexCenter flex-col gap-4">
         <DatePicker value={value} onChange={setValue} minDate={new Date()} />

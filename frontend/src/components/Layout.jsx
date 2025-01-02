@@ -34,7 +34,6 @@ const Layout = () => {
           token: res,
         }));
         mutate(res);
-        console.log(res);
       } catch (error) {
         console.error("Error fetching access token:", error);
       }

@@ -119,8 +119,8 @@ export const toFav = async (rid, email, token) => {
 export const getAllFavourites = async (email, token) => {
   if (!token) return;
   try {
-    const response = await api.get(
-      `/user/getAllFavourites`,
+    const response = await api.post(
+      `/user/allFavourites`,
       {
         email,
       },
@@ -141,8 +141,8 @@ export const getAllFavourites = async (email, token) => {
 export const getAllBookings = async (email, token) => {
   if (!token) return;
   try {
-    const response = await api.get(
-      `/user/getAllBookings`,
+    const response = await api.post(
+      `/user/allBookings`,
       {
         email,
       },
@@ -152,10 +152,31 @@ export const getAllBookings = async (email, token) => {
         },
       }
     );
+    console.log("The response", response);
 
     return response.data["bookedVisits"];
   } catch (error) {
     toast.error("Something went wrong while fetching bookings");
+    throw error;
+  }
+};
+
+export const createResidency = async (data, token, userEmail) => {
+  const requestedData = { ...data, userEmail };
+  try {
+    await api.post(
+      "/residency/create",
+      {
+        requestedData,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  } catch (error) {
+    toast.error("Something went wrong while creating residency");
     throw error;
   }
 };
