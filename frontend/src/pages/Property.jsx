@@ -3,7 +3,7 @@ import { useQuery, useMutation } from "react-query";
 import { useLocation } from "react-router-dom";
 import { PuffLoader } from "react-spinners";
 import { getProperty, removeBooking } from "../utils/api";
-import { FaHeart, FaStar } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import {
   MdOutlineBathtub,
@@ -18,6 +18,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import userDetailContext from "../context/UserDetailContext";
 import { Button } from "@mantine/core";
 import { toast } from "react-toastify";
+import HeartBtn from "../components/HeartBtn";
 
 const Property = () => {
   const [modalOpened, setModalOpened] = useState(false);
@@ -77,7 +78,7 @@ const Property = () => {
           className="rounded-tr-3xl rounded-tl-3xl max-h-[27rem] w-full object-cover aspect-square"
         />
         <div className="absolute top-8 right-8">
-          <FaHeart className="text-white text-xl" />
+          <HeartBtn id={id} />
         </div>
       </div>
       {/* CONTAINER */}
@@ -142,11 +143,13 @@ const Property = () => {
                 </p>
               </>
             ) : (
-              <button
+              <Button
                 onClick={() => {
                   validateLogin() && setModalOpened(true);
                 }}
-                className="btn-dark"
+                variant="filled"
+                w={"50%"}
+                color="black"
               >
                 Book visit
                 <BookingModal
@@ -155,7 +158,7 @@ const Property = () => {
                   propertyId={id}
                   email={user?.email}
                 />
-              </button>
+              </Button>
             )}
           </div>
         </div>
