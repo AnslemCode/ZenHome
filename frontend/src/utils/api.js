@@ -152,7 +152,6 @@ export const getAllBookings = async (email, token) => {
         },
       }
     );
-    console.log("The response", response);
 
     return response.data["bookedVisits"];
   } catch (error) {

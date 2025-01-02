@@ -40,7 +40,7 @@ const Favourites = () => {
           {/* CONTAINER */}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-10">
             {data
-              .filter((property) => favourites.includes(property._id))
+              .filter((property) => (favourites || []).includes(property.id))
               .filter(
                 (property) =>
                   property.title.toLowerCase().includes(filter.toLowerCase()) ||

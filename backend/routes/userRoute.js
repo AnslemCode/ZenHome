@@ -13,9 +13,9 @@ const router = express.Router();
 
 router.post("/register", checkJwt, createUser);
 router.post("/bookVisit/:id", checkJwt, bookVisit);
-router.get("/allBookings", getAllBookings);
+router.post("/allBookings", getAllBookings);
 router.post("/cancelBooking/:id", checkJwt, cancelBooking);
 router.post("/addFavourite/:rid", checkJwt, addFavourite);
-router.get("/allFavourites", checkJwt, getAllFavourites);
+router.post("/allFavourites", checkJwt, getAllFavourites);
 
 export { router as userRoute };
